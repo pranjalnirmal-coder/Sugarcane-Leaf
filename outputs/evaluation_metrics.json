@@ -1,0 +1,93 @@
+{
+  "test_accuracy": 0.7923976608187134,
+  "classification_report": {
+    "Healthy": {
+      "precision": 0.8529411764705882,
+      "recall": 0.8285714285714286,
+      "f1-score": 0.8405797101449275,
+      "support": 70.0
+    },
+    "Mosaic": {
+      "precision": 0.7551020408163265,
+      "recall": 0.6727272727272727,
+      "f1-score": 0.7115384615384616,
+      "support": 55.0
+    },
+    "RedRot": {
+      "precision": 0.71,
+      "recall": 0.9102564102564102,
+      "f1-score": 0.797752808988764,
+      "support": 78.0
+    },
+    "Rust": {
+      "precision": 0.85,
+      "recall": 0.7611940298507462,
+      "f1-score": 0.8031496062992126,
+      "support": 67.0
+    },
+    "Yellow": {
+      "precision": 0.8307692307692308,
+      "recall": 0.75,
+      "f1-score": 0.7883211678832117,
+      "support": 72.0
+    },
+    "accuracy": 0.7923976608187134,
+    "macro avg": {
+      "precision": 0.7997624896112291,
+      "recall": 0.7845498282811716,
+      "f1-score": 0.7882683509709154,
+      "support": 342.0
+    },
+    "weighted avg": {
+      "precision": 0.7993622199217068,
+      "recall": 0.7923976608187134,
+      "f1-score": 0.7917253272091299,
+      "support": 342.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      58,
+      8,
+      2,
+      0,
+      2
+    ],
+    [
+      8,
+      37,
+      5,
+      2,
+      3
+    ],
+    [
+      0,
+      1,
+      71,
+      2,
+      4
+    ],
+    [
+      0,
+      0,
+      14,
+      51,
+      2
+    ],
+    [
+      2,
+      3,
+      8,
+      5,
+      54
+    ]
+  ],
+  "class_names": [
+    "Healthy",
+    "Mosaic",
+    "RedRot",
+    "Rust",
+    "Yellow"
+  ],
+  "test_image_count": 342
+}
