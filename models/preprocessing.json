@@ -1,0 +1,13 @@
+{
+  "image_size": [
+    224,
+    224
+  ],
+  "color_order": "RGB",
+  "input_range": [
+    -1.0,
+    1.0
+  ],
+  "normalization": "pixel / 127.5 - 1.0",
+  "backbone": "MobileNetV2"
+}
