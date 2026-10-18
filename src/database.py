@@ -45,9 +45,14 @@ def initialize_database(db_path: Path = DATABASE_PATH) -> None:
                 confidence REAL NOT NULL,
                 uncertain INTEGER NOT NULL DEFAULT 0,
                 model_version TEXT NOT NULL,
-                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                severity_assessment TEXT
             );
         """)
+        # Upgrade databases created before severity assessments were added.
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(predictions)")}
+        if "severity_assessment" not in columns:
+            connection.execute("ALTER TABLE predictions ADD COLUMN severity_assessment TEXT")
 
 
 def create_user(username: str, password: str, db_path: Path = DATABASE_PATH) -> int:
@@ -91,6 +96,20 @@ def save_prediction(user_id: int, image_name: str, class_name: str, confidence: 
 def get_history(user_id: int, limit: int = 50, db_path: Path = DATABASE_PATH) -> list[dict]:
     with _connect(db_path) as connection:
         rows = connection.execute(
-            "SELECT image_name, class_name, confidence, uncertain, model_version, created_at "
+            "SELECT image_name, class_name, confidence, uncertain, model_version, created_at, severity_assessment "
             "FROM predictions WHERE user_id = ? ORDER BY id DESC LIMIT ?", (user_id, limit)).fetchall()
     return [dict(row) for row in rows]
+
+
+def update_severity_assessment(prediction_id: int, user_id: int, assessment: str,
+                                db_path: Path = DATABASE_PATH) -> None:
+    """Save a user's visual severity assessment for their own prediction."""
+    allowed = {"No visible symptoms", "Mild", "Moderate", "Severe", "Unable to assess"}
+    if assessment not in allowed:
+        raise ValueError("Choose a valid visual severity assessment.")
+    with _connect(db_path) as connection:
+        cursor = connection.execute(
+            "UPDATE predictions SET severity_assessment = ? WHERE id = ? AND user_id = ?",
+            (assessment, prediction_id, user_id))
+        if cursor.rowcount != 1:
+            raise ValueError("Prediction was not found for this account.")
