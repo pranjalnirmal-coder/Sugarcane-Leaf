@@ -74,30 +74,3 @@ def preprocess_pil_for_display(image: Image.Image,
     """Return normalized model input from an already validated PIL image."""
     rgb = image.convert("RGB").resize((image_size[1], image_size[0]), Image.Resampling.BILINEAR)
     return np.expand_dims(np.asarray(rgb, dtype=np.float32) / 127.5 - 1.0, axis=0)
-
-def reject_obvious_documents(image: Image.Image) -> None:
-    """Reject obvious white-page screenshots before the leaf classifier runs.
-
-    This is a limited check for document-like images, not a general leaf detector.
-    """
-    small = np.asarray(
-        image.convert("RGB").resize((128, 128), Image.Resampling.BILINEAR),
-        dtype=np.int16,
-    )
-    channel_max = small.max(axis=2)
-    channel_min = small.min(axis=2)
-
-    bright_neutral = (channel_min >= 220) & ((channel_max - channel_min) <= 28)
-    saturated = (channel_max - channel_min) >= 45
-    r, g, b = small[..., 0], small[..., 1], small[..., 2]
-    green = (g >= 55) & (g > r * 1.06) & (g > b * 1.03)
-
-    if (
-        float(bright_neutral.mean()) >= 0.55
-        and float(saturated.mean()) <= 0.12
-        and float(green.mean()) <= 0.03
-    ):
-        raise ImageValidationError(
-            "This looks like a document or screenshot rather than a leaf photo. "
-            "Please upload a clear, close-up sugarcane leaf image."
-        )
