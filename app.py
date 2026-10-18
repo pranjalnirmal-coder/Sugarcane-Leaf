@@ -133,7 +133,7 @@ def main() -> None:
 
     st.title("Sugarcane Leaf Disease Detection and Advisory System")
     st.write("Upload a sugarcane leaf image to see the model prediction, confidence, visual explanation, and preliminary guidance.")
-    st.info("This is a student decision-support tool. It does not replace an agricultural expert or confirm a field diagnosis.")
+    
 
     if "upload_generation" not in st.session_state:
         st.session_state.upload_generation = 0
