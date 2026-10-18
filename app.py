@@ -66,6 +66,7 @@ def show_history(user_id: int) -> None:
         "Date and time": row["created_at"], "Image": row["image_name"],
         "Prediction": row["class_name"], "Confidence": f"{row['confidence']:.1%}",
         "Status": "Uncertain" if row["uncertain"] else "Above threshold",
+        "Visual severity assessment": row["severity_assessment"] or "Not recorded",
     } for row in history], use_container_width=True, hide_index=True)
 
 
@@ -133,7 +134,7 @@ def main() -> None:
 
     st.title("Sugarcane Leaf Disease Detection and Advisory System")
     st.write("Upload a sugarcane leaf image to see the model prediction, confidence, visual explanation, and preliminary guidance.")
-    
+    st.info("This is a student decision-support tool. It does not replace an agricultural expert or confirm a field diagnosis.")
 
     if "upload_generation" not in st.session_state:
         st.session_state.upload_generation = 0
@@ -170,13 +171,14 @@ def main() -> None:
                     batch = preprocess_image(uploaded)
                     heatmap = generate_gradcam(model, batch, class_index=class_names.index(result["class_name"]))
                     overlay = create_overlay(original, heatmap)
-                    database.save_prediction(st.session_state.user_id, uploaded.name,
-                                             result["class_name"], result["confidence"],
-                                             result["uncertain"], MODEL_PATH.name)
+                    prediction_id = database.save_prediction(st.session_state.user_id, uploaded.name,
+                                                             result["class_name"], result["confidence"],
+                                                             result["uncertain"], MODEL_PATH.name)
                     st.session_state.analysis = {
                         "result": result, "advisory": advisory,
                         "heatmap": heatmap, "overlay": overlay,
                         "original": original.copy(),
+                        "prediction_id": prediction_id,
                     }
             except ImageValidationError as exc:
                 st.error(str(exc))
@@ -200,6 +202,17 @@ def main() -> None:
         with overlay_col:
             st.image(analysis["overlay"], caption="Heatmap overlay", use_container_width=True)
         st.caption("Grad-CAM highlights image regions that influenced the prediction; it does not prove that those regions contain disease.")
+        st.subheader("Visual severity assessment (manual)")
+        st.caption("Record your own observation of visible symptoms on this leaf. This is not estimated by the AI, does not establish disease severity for the plant or field, and is not a treatment recommendation.")
+        severity_options = ["Unable to assess", "No visible symptoms", "Mild", "Moderate", "Severe"]
+        severity_key = f"severity_{analysis['prediction_id']}"
+        selected_severity = st.selectbox(
+            "How extensive do the visible symptoms look?", severity_options,
+            key=severity_key)
+        if st.button("Save visual assessment", key=f"save_severity_{analysis['prediction_id']}"):
+            database.update_severity_assessment(
+                analysis["prediction_id"], st.session_state.user_id, selected_severity)
+            st.success("Visual assessment saved to your local prediction history.")
         st.subheader("Disease information and preliminary guidance")
         st.write(advisory["description"])
         advice_col, prevention_col = st.columns(2)
