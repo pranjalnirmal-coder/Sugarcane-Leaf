@@ -58,6 +58,23 @@ def open_validated_image(source: bytes | bytearray | BinaryIO | str | Path) -> I
         raise ImageValidationError("This image is unreadable or damaged. Please choose another file.") from exc
 
 
+def preprocess_image(source: bytes | bytearray | BinaryIO | str | Path,
+                     image_size: tuple[int, int] = IMAGE_SIZE) -> np.ndarray:
+    """Prepare one image for MobileNetV2; returns a float32 [1,H,W,3] batch."""
+    image = open_validated_image(source)
+    image = image.resize((image_size[1], image_size[0]), Image.Resampling.BILINEAR)
+    pixels = np.asarray(image, dtype=np.float32)
+    # This is TensorFlow's MobileNetV2 preprocess_input transformation.
+    pixels = pixels / 127.5 - 1.0
+    return np.expand_dims(pixels, axis=0)
+
+
+def preprocess_pil_for_display(image: Image.Image,
+                               image_size: tuple[int, int] = IMAGE_SIZE) -> np.ndarray:
+    """Return normalized model input from an already validated PIL image."""
+    rgb = image.convert("RGB").resize((image_size[1], image_size[0]), Image.Resampling.BILINEAR)
+    return np.expand_dims(np.asarray(rgb, dtype=np.float32) / 127.5 - 1.0, axis=0)
+
 def reject_obvious_documents(image: Image.Image) -> None:
     """Reject obvious white-page screenshots before the leaf classifier runs.
 
@@ -84,5 +101,3 @@ def reject_obvious_documents(image: Image.Image) -> None:
             "This looks like a document or screenshot rather than a leaf photo. "
             "Please upload a clear, close-up sugarcane leaf image."
         )
-
-                     
