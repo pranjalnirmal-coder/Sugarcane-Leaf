@@ -4,7 +4,7 @@ from __future__ import annotations
 
 ADVISORIES = {
     "Healthy": {
-        "display_name": "Healthy (dataset class)",
+        "display_name": "Healthy",
         "description": "The image resembles the dataset's healthy-leaf examples. This does not certify that the whole plant or field is disease-free.",
         "prevention": ["Use healthy planting material and keep tools and field operations clean.",
                        "Inspect plants regularly and seek expert advice if symptoms appear."],
@@ -13,7 +13,7 @@ ADVISORIES = {
         "sources": ["https://agritech.tnau.ac.in/crop_protection/crop_prot_ipm_sugarcane.html"],
     },
     "Mosaic": {
-        "display_name": "Mosaic (dataset class)",
+        "display_name": "Mosaic",
         "description": "The dataset label is Mosaic. Sugarcane mosaic can cause mottled or irregular light and dark green areas, but visual similarity alone is not a definitive diagnosis.",
         "prevention": ["Use healthy, disease-free planting material.",
                        "Monitor the crop and ask an agricultural expert to confirm suspected virus symptoms."],
@@ -22,7 +22,7 @@ ADVISORIES = {
         "sources": ["https://agritech.tnau.ac.in/org_farm/orgfarm_agridiseases.html"],
     },
     "RedRot": {
-        "display_name": "Red Rot (dataset class)",
+        "display_name": "Red Rot",
         "description": "The dataset label is Red Rot. Reported signs can include leaf yellowing and drying; confirmation often requires inspecting cane tissue, so a leaf photo alone is limited.",
         "prevention": ["Use setts from healthy, disease-free planting stock.",
                        "Use locally recommended resistant varieties and maintain field sanitation."],
@@ -33,7 +33,7 @@ ADVISORIES = {
                     "https://agritech.tnau.ac.in/expert_system/sugar/faq.html"],
     },
     "Rust": {
-        "display_name": "Rust (dataset class; report refers to Brown Rust)",
+        "display_name": "Rust/Brown Rust",
         "description": "The report mentions Brown Rust. The dataset folder is named Rust; typical sugarcane rust can produce elongated yellow to reddish-brown leaf spots and a rusty appearance.",
         "prevention": ["Use varieties recommended locally for resistance and inspect leaves for developing spots.",
                        "Keep records of affected areas and seek local confirmation."],
@@ -42,7 +42,7 @@ ADVISORIES = {
         "sources": ["https://www.agritech.tnau.ac.in/crop_protection/sugarcane_diseases/sugarcane_d3.html"],
     },
     "Yellow": {
-        "display_name": "Yellow (dataset label; disease identity not specified)",
+        "display_name": "Yellow",
         "description": "Yellow is the dataset folder name; it does not identify a specific disease. Yellowing can have several causes, and this app cannot equate this label with Sugarcane Yellow Leaf Disease.",
         "prevention": ["Photograph the whole plant and surrounding crop, and note when symptoms began.",
                        "Use clean planting material and maintain regular crop monitoring."],
