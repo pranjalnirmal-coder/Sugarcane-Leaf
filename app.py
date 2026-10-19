@@ -219,7 +219,7 @@ def main() -> None:
         show_model_evaluation()
     with st.expander("Prediction history"):
         show_history(st.session_state.user_id)
-    st.caption("Supported model classes are determined by the dataset: Healthy, Mosaic, RedRot, Rust, and Yellow. The Yellow dataset label is not a specific disease diagnosis.")
+    
 
 
 if __name__ == "__main__":
