@@ -191,7 +191,6 @@ def main() -> None:
         st.metric("Model confidence", f"{result['confidence']:.1%}")
         if result["uncertain"]:
             st.warning(result["message"])
-        st.caption("A softmax confidence score does not reliably detect every non-leaf or out-of-distribution image. Upload a clear sugarcane leaf photo and confirm important decisions with an expert.")
         original_col, heat_col, overlay_col = st.columns(3)
         with original_col:
             st.image(analysis["original"], caption="Original image", use_container_width=True)
@@ -199,7 +198,6 @@ def main() -> None:
             st.image(analysis["heatmap"], caption="Grad-CAM heatmap", clamp=True, use_container_width=True)
         with overlay_col:
             st.image(analysis["overlay"], caption="Heatmap overlay", use_container_width=True)
-        st.caption("Grad-CAM highlights image regions that influenced the prediction; it does not prove that those regions contain disease.")
         st.subheader("Disease information and preliminary guidance")
         st.write(advisory["description"])
         advice_col, prevention_col = st.columns(2)
