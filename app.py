@@ -187,7 +187,7 @@ def main() -> None:
     if analysis:
         result, advisory = analysis["result"], analysis["advisory"]
         st.divider()
-        st.subheader(f"Model prediction (not a confirmed diagnosis): {advisory['display_name']}")
+        st.subheader(f"Model prediction: {advisory['display_name']}")
         st.metric("Model confidence", f"{result['confidence']:.1%}")
         if result["uncertain"]:
             st.warning(result["message"])
